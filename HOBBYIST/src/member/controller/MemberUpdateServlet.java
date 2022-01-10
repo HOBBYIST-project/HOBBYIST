@@ -36,6 +36,10 @@ public class MemberUpdateServlet extends HttpServlet {
 		String phone = request.getParameter("phone").trim(); // 새로 입력 받는 값이기 때문에 trim()으로 공백 삭제
 		String nickName = request.getParameter("nickName").trim();
 		
+		System.out.println(email);
+		System.out.println(name);
+		System.out.println(phone);
+		System.out.println(nickName);
 //		HttpSession session = request.getSession();
 //		String originNickName = ((Member)session.getAttribute("loginUser")).getNickName();
 		// String nickName = request.getParameter("nickName").trim().equals("") ? originNickName : request.getParameter("nickName").trim();

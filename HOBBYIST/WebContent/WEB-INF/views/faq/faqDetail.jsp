@@ -177,7 +177,7 @@
 						class="la la-check-circle"></i>
 						<p>CLASS APV LIST</p>
 				</a></li>
-				<li class="nav-item active"><a
+				<li class="nav-item"><a
 					href="<%=request.getContextPath()%>/FAQ.bo"> <i
 						class="la la-question-circle"></i>
 						<p>FAQ</p>
@@ -243,7 +243,7 @@
 												</tbody>
 											</table>
 											<div id="btnArea">
-												<input type="button" class="btn btn-default pull" id="FAQcancel" value="목록으로" onclick="location.href='javascript:history.go(-1);'">
+												<input type="button" class="btn btn-default pull" id="FAQcancel" value="목록으로" onclick="location.href='<%= request.getContextPath() %>/FAQ.bo'">
 												<input type="submit" class="btn btn-primary pull-right" id="editFaqBtn" value="수정하기">
 											</div>
 										</form>

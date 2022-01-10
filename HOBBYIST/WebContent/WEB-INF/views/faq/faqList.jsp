@@ -168,7 +168,7 @@
 						class="la la-check-circle"></i>
 						<p>CLASS APV LIST</p>
 				</a></li>
-				<li class="nav-item active"><a
+				<li class="nav-item"><a
 					href="<%=request.getContextPath()%>/FAQ.bo"> <i
 						class="la la-question-circle"></i>
 						<p>FAQ</p>

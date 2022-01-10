@@ -101,7 +101,7 @@
 					class="la la-user"></i>
 					<p>MEMBER LIST</p>
 				</a></li>
-				<li class="nav-item active"><a
+				<li class="nav-item"><a
 					href="<%=request.getContextPath()%>/apvList.cl"> <i
 						class="la la-check-circle"></i>
 						<p>CLASS APV LIST</p>

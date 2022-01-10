@@ -111,7 +111,7 @@
 						class="la la-check-circle"></i>
 						<p>CLASS APV LIST</p>
 				</a></li>
-				<li class="nav-item active"><a
+				<li class="nav-item"><a
 					href="<%=request.getContextPath()%>/FAQ.bo"> <i
 						class="la la-question-circle"></i>
 						<p>FAQ</p>
@@ -142,7 +142,7 @@
 
 								<div class="container">
 									<div class="row">
-										<form action="FAQUpdateForm.bo" id="detailForm" name="detailForm" method="post">
+										<form action="<%= request.getContextPath() %>/FAQUpdate.bo" id="detailForm" name="detailForm" method="post">
 											<table class="table table-striped"
 												style="text-align: center; border: 1px solid #dddddd">
 												<tbody>
@@ -150,7 +150,7 @@
 														<th style="background color: #eeeeee; text-align: center;"> 번호</th>
 														<td id="td_content"> 
 															<%= faq.getFaqNo() %> 
-															<input type="hidden" id="no" name="no" value="<%= faq.getFaqNo() %>">
+															<input type="hidden" id="no" name="no" value="<%= faq.getFaqNo() %>" readonly>
 														</td>											
 													</tr>
 													<tr>
@@ -180,9 +180,9 @@
 												</tbody>
 											</table>
 											<div id="btnArea">
-												<input type="button" class="btn btn-default pull-right" id="FAQcancel" value="목록으로" style="margin-left: 5px;" onclick="location.href='javascript:history.go(-1);'">
-												<input type="button" class="btn btn-warning pull-right" id="deleteBtn" value="삭제하기" style="margin-left: 5px;" onclick="deleteFAQ();">
+												<input type="button" class="btn btn-warning pull" id="deleteBtn" value="삭제하기" style="margin-left: 5px;" onclick="deleteFAQ();">
 												<input type="submit" class="btn btn-primary pull-right" id="editFaqBtn" style="margin-left: 5px;" value="수정하기">
+												<input type="button" class="btn btn-default pull-right" id="FAQcancel" value="목록으로" style="margin-left: 5px;" onclick="location.href='<%= request.getContextPath() %>/FAQ.bo'">
 											</div>
 										</form>
 									</div>
@@ -194,6 +194,15 @@
 			</div>
 		</div>
 	</div>
+	
+	<script>
+		function deleteFAQ(){
+			if(confirm("정말로 삭제하시겠습니까?")){
+				$('#detailForm').attr('action', 'FAQdelete.bo');
+				$('#detailForm').submit();
+				}
+			}		
+	</script>	
 	
 	<%@ include file="../common/js.jsp"%>
 </body>

@@ -1,187 +1,199 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8" import="java.util.ArrayList, faq.model.vo.FAQ" %>
+    pageEncoding="UTF-8" import="java.util.ArrayList, faq.model.vo.FAQ, member.model.vo.Member" %>
 <% 
-	ArrayList<FAQ> list = (ArrayList<FAQ>)request.getAttribute("list");
-
-//	if(list == null){
-//	    list = new ArrayList<FAQ>();
-// 	PageInfo pi = (PageInfo)request.getAttribute("pi");
+	FAQ faq= (FAQ)request.getAttribute("faq");
+	Member loginUser = (Member)session.getAttribute("loginUser");
 %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>자주 묻는 질문(FAQ)</title>
+<%@ include file="../common/css.jsp"%>
+<!-- <script src="js/jquery-3.6.0.min.js"></script> -->
+<!-- <script src="js/menubar.js"></script> -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 <style>
-	#outer {
-		width: 1000px;
-		height : 400px;
-		margin-left: 10px;
-	}
-	.tableArea {
-		width: 900px;
-		height : 300px;
-		margin-left: 0;
- 	}
-	#listArea {
-		text-align: center;
-	}
-	
-	#FAQWriteBtn {
-		background: #9ED4C2;
-		border: 1px solid white;
-		width : 100px;
-		height : 35px;
-		font-weight: bold;
-		color : white;
-	}
-	
-	#FAQcancel{
-		width : 100px;
-		height : 35px;
-		font-weight: bold;
-		border: 1px solid white;
-	}
-	
-	th {
-		border-bottom: 1px solid lightgrey;
-		height : 35px;
-	}
-	
-	td {
-		height : 25px;
-		border-bottom: 1px solid lightgrey;
-	}
-	
-	#btnArea {
-		margin-left: 457px;
-	}
-	
-	
+.tdReply{
+	border-right: 1px solid black;
+}
+#tdReply {
+	height: 250px;
+}
 </style>
-<script src="js/jquery-3.6.0.min.js"></script>
-<link rel="stylesheet" type="text/css" href="css/menubar.css">
-<script src="js/menubar.js"></script>
+<title>자주 묻는 질문(FAQ)</title>
 </head>
 <body>
-	<div class="app-dashboard shrink-medium">
-	
-		<!-- 상단바 -->
-		<%@ include file="../common/topbar.jsp" %>
-		
-		<!-- 바디 영역(사이드바, 본문) -->
-		<div class="app-dashboard-body off-canvas-wrapper">
-		
-			<!-- 사이드바 영역 -->
-			<div id="app-dashboard-sidebar" class="app-dashboard-sidebar position-left off-canvas off-canvas-absolute reveal-for-medium" data-off-canvas>
-				
-				<!-- 사이드바 close, open -->
-				<div class="app-dashboard-sidebar-title-area">
-					<div class="app-dashboard-close-sidebar">
-						<!-- Close button -->
-						<button id="close-sidebar" data-app-dashboard-toggle-shrink
-							class="app-dashboard-sidebar-close-button show-for-medium"
-							aria-label="Close menu" type="button">
-							<span aria-hidden="true"><a href="#"><i
-									class="large fa fa-angle-double-left"><img
-								src="images/three-dots-vertical.svg"></i></a></span> 
-						</button>
+	<div class="banner_bg_main">
+		<div class="container">
+			<div class="header_section_top">
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="custom_menu">
+							<ul>
+								<li><a href="<%= request.getContextPath() %>">MAIN</a></li>
+									<% if(loginUser == null) { %>
+										<li></li>
+										<li><a href="#" onclick="alert('로그인을 먼저 해주세요.');">LIKED-CLASS</a></li> <!-- 로그인 전이면 LIKED-CLASS 접근 불가 -->
+									<% } else if(loginUser.getMemberGrade().equals("A")){ %>
+										<!-- 관리자면 LIKED-CLASS버튼 비활성화 -->
+									<% } else { %>
+										<li></li>
+										<li><a href="<%= request.getContextPath() %>/myClass.te">LIKED-CLASS</a></li>
+									<% } %>
+										<li></li>
+									<% if(loginUser == null) { %>
+										<li><a href="<%= request.getContextPath() %>/loginForm.me">LOG-IN</a></li> <!-- login전이면 로그인버튼 -->
+									<% } else { %>
+										<li><a href="<%= request.getContextPath() %>/logout.me">LOG-OUT</a></li> <!-- login된 상태면 로그아웃버튼 -->
+									<% } %>
+										<li></li>
+									<% if(loginUser == null) { %>
+										<li><a href="#" onclick="alert('로그인을 먼저 해주세요.');">MY INFO</a></li>
+									<% } else { %>
+										<li><a href="<%= request.getContextPath() %>/myInfo.me">MY INFO</a></li> <!-- 로그인 전이면 MY INFO 접근 불가 -->
+									<% } %>
+										<li></li>
+										<li><a href="<%= request.getContextPath() %>/FAQ.bo">FAQ</a></li>
+							</ul>
+						</div>
 					</div>
-					<!-- open button -->
-					<div class="app-dashboard-open-sidebar">
-						<button id="open-sidebar" data-app-dashboard-toggle-shrink
-							class="app-dashboard-open-sidebar-button show-for-medium"
-							aria-label="open menu" type="button">
-							<span aria-hidden="true"><a href="#"><i
-									class="large fa fa-angle-double-right"><img
-								src="images/three-dots-vertical.svg"></i></a></span> 
-						</button>
-					</div>
-				</div>
-				
-				<!-- 사이드바 -->
-				<div class="app-dashboard-sidebar-inner">
-					<ul class="menu vertical">
-						<li><a href="<%= request.getContextPath() %>/list.cs">
-							<span class="app-dashboard-sidebar-text"><h3>1:1문의</h3></span>
-						</a></li>
-						<li><a href="<%= request.getContextPath() %>/FAQ.bo">
-							<span class="app-dashboard-sidebar-text"><h3>FAQ</h3></span>
-						</a></li>
-						<br><br><br>
-					</ul>
-					
-					
 				</div>
 			</div>
+		</div>
+	</div>
 
-			<!-- 본문 영역 -->
-			<div class="app-dashboard-body-content off-canvas-content" data-off-canvas-content> 				
-				<div class="sub08_title">
-					<div class="title"><h1>자주 묻는 질문(FAQ) 등록</h1></div>
-						</div>
-						<br>
-							<form id="tx_editor_form" name="tx_editor_form" action="<%= request.getContextPath() %>/FAQinsert.bo" method="post">
-								<table id="write_frm" cellpadding="0" cellspacing="0">
-									<tr>
-										<th style="width: 150px; height: 50px">제목</th>
-										<td>
-											<input type="text" id="title" name="title" style="width: 500px; height: 25px;" value="">
-										</td>
-									</tr>
-									<tr>
-										<th style="height: 50px;">카테고리</th>
-										<td>
-											<select id="category" name="category" style="width: 120px; height: 30px;">
-												<option value="계정">계정</option>
-												<option value="수강">수강</option>
-												<option value="서비스">서비스</option>
-												<option value="기타">기타</option>
-											</select>
-										</td>
-									</tr>
-									<tr>
-										<th>내용</th>
-										<td>
-											<div class="tx-source-deco">
-												<div id="tx_canvas_source_holder" class="tx-holder">
-													<textarea id="reply" name="reply" rows="20" cols="70" style= "resize: none"></textarea>
-												</div>
+	<!-- 메인 화면 -->
+	<div class="sidebar">
+		<div class="scrollbar-inner sidebar-wrapper">
+			<div class="user">
+				<div class="photo">
+					<img src="../assets/images/iu3.jpg">
+				</div>
+				<div class="info">
+					<a class="" data-toggle="collapse" href="#collapseExample"
+						aria-expanded="true"> <span> <b><%= loginUser.getMemberNickName()  %></b> <!-- loginUser의 NickName 불러오기 -->
+							<span class="user-level"><!-- loginUser의 grade 불러오기 -->
+								<% if(loginUser.getMemberGrade().equals("A")) { %>
+									<span class="user-level">관리자(admin)</span>
+								<% } else if(loginUser.getMemberGrade().equals("B")) { %>
+									<span class="user-level">튜터(Tutor)</span>
+								<% } else { %>
+									<span class="user-level">튜티(Tutee)</span>
+								<% }  %>
+							</span> 
+							<span class="caret"></span>
+					</span>
+					</a>
+					<div class="clearfix"></div>
+
+					<div class="collapse in" id="collapseExample" aria-expanded="true"
+						style="">
+						<ul class="nav">
+							<li><a href="<%=request.getContextPath()%>/myInfo.me"> <span
+									class="link-collapse"> ADMIN 정보 보기</span>
+							</a></li>
+							<li><a href="<%=request.getContextPath()%>/updateForm.me">
+									<span class="link-collapse"> ADMIN 정보 수정</span>
+							</a></li>
+							
+						</ul>
+					</div>
+				</div>
+			</div>
+			<ul class="nav">
+				<li class="nav-item"><a
+					href="<%=request.getContextPath()%>/memberCheck.admin"> <i
+					class="la la-user"></i>
+					<p>MEMBER LIST</p>
+				</a></li>
+				<li class="nav-item"><a
+					href="<%=request.getContextPath()%>/apvList.cl"> <i
+						class="la la-check-circle"></i>
+						<p>CLASS APV LIST</p>
+				</a></li>
+				<li class="nav-item"><a
+					href="<%=request.getContextPath()%>/FAQ.bo"> <i
+						class="la la-question-circle"></i>
+						<p>FAQ</p>
+				</a></li>
+				<li class="nav-item"><a
+					href="<%=request.getContextPath()%>/list.cs"> <i
+						class="la la-question-circle"></i>
+						<p>1:1 REQUEST</p>
+				</a></li>
+			</ul>
+		</div>
+	</div>
+	
+	<!-- 메인 영역 -->
+	<div class="main-panel">
+		<div class="content">
+			<div class="container-fluid">
+				<h4 class="page-title">FAQ MANAGEMENT</h4>
+				<hr>
+				<div class="row justify-content-center">
+
+					<div class="col-md-12">
+						<div class="card">
+							<div class="card-header">
+								<div class="card-title">자주 하는 질문(FAQ) 등록</div>
+							</div>
+							<div class="card-body">
+
+								<div class="container">
+									<div class="row">
+										<form action="<%= request.getContextPath() %>/FAQinsert.bo" id="detailForm" name="detailForm" method="post">
+											<table class="table table-striped"
+												style="text-align: center; border: 1px solid #dddddd">
+												<tbody>
+															<%-- <tr>
+																<th style="background color: #eeeeee; text-align: center;"> 번호</th>
+																<td id="td_content"> 
+																	<%= faq.getFaqNo() %> 
+																	<input type="hidden" id="no" name="no" value="<%= faq.getFaqNo() %>">
+																</td>											
+															</tr> --%>
+													<tr>
+														<th style="background color: #eeeeee; text-align: center;"> 제목</th>
+														<td> 
+															<input type="text" id="title" name="title" style="width:700px; height:35px;" value="">
+														</td>
+													</tr>
+													<tr>
+														<th style="background color: #eeeeee; text-align: center;"> 카테고리</th>
+														<td> 
+															<select id="category" name="category" style="width: 700px; height: 35px;">
+																<option value="계정">계정</option>
+																<option value="수강">수강</option>
+																<option value="서비스">서비스</option>
+																<option value="기타">기타</option>
+															</select>
+														</td>
+													</tr>
+													
+													<tr>
+														<th style="background color: #eeeeee; text-align: center;"> 내용</th>
+														<td >
+															<textarea id="reply" name="reply" rows="20" cols="97" style= "resize: none"></textarea>
+														</td>
+													</tr>												
+												</tbody>
+											</table>
+											<div id="btnArea">
+												<input type="submit" class="btn btn-primary pull-right" id="FAQWriteBtn" style="margin-left: 5px;" value="FAQ 등록">
+												<input type="button" class="btn btn-default pull-right" id="FAQcancel" value="작성 취소" style="margin-left: 5px;" onclick="location.href='javascript:history.go(-1);'">
 											</div>
-										</td>
-									</tr>
-<!-- 									<tr> -->
-<!-- 										<td colspan="2" class="ta last"> -->
-<!-- 											<div class="board_view_botton" style="width:auto;" align="right"> -->
-<!-- 												<input type="button" id="FAQcancel" value="취소"> -->
-<!-- 												<input type="button" id="FAQWriteBtn" value="등록"> -->
-<!-- 											</div> -->
-<!-- 											<br><br> -->
-<!-- 										</td> -->
-<!-- 									</tr> -->
-								</table>
-								<br>
-									<div id="btnArea" style="width:auto;">
-										<input type="button" id="FAQcancel" value="취소" onclick="location.href='javascript:history.go(-1);'">
-										<button type="submit" id="FAQWriteBtn">등록</button>
+										</form>
 									</div>
-								<br>
-							</form>
+								</div>
+							</div>
 						</div>
 					</div>
-
-			
-		<!-- FOOTER -->
-			<footer class="container" style="text-align: center; background: #F5F5F5;">
-			
-				<p class="float-end">
-					<a href="#">Back to top</a>
-				</p>
-				<p>
-					&copy; 2021 HOBBYIST, Inc. &middot; <a href="<%= request.getContextPath() %>/faq.bo">Contact</a>
-					<!-- &middot; <a href="#">Terms</a> -->
-				</p>
-			</footer> 
+				</div>
+			</div>
+		</div>
 	</div>
+	
+	<%@ include file="../common/js.jsp"%>
 </body>
 </html>
